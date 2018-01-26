@@ -12,6 +12,14 @@ var spawningHarvesters = require('spawning.harvesters');
 
 var spawning  = {
 	run: function() {
+		//Remove dead creeps from memory
+		for(let name in Memory.creeps){
+			if(Game.creeps[name] == undefined){
+				delete Memory.creeps[name];
+			}
+		}
+
+		//Calling spawners
 		spawningBuilders.run();
 		spawningUpgraders.run();
 		spawningHarvesters.run();
