@@ -1,12 +1,11 @@
 var spawningHarvesters = {
 	run: function() {
-
+		const maxHarvesters = 2;
 		var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 
-	    if (harvesters.length < 2) {
+	    if (harvesters.length < maxHarvesters) {
 	        var newName = 'Harvester' + Game.time;
-	        console.log('Trying to spawn new harvester: ' + newName);
-	        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, {
+	        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE], newName, {
 	            memory: {
 	                role: 'harvester'
 	            }
