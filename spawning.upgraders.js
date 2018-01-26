@@ -5,8 +5,7 @@ var spawningUpgraders = {
 
 		if (upgraders.length < 2) {
 			newName = 'Upgrader' + Game.time;
-			console.log('Trying to spawn new upgrader ' + newName);
-			Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, {
+			Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE], newName, {
 				memory: {
 					role: 'upgrader'
 				}
