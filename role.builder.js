@@ -3,26 +3,23 @@ var roleBuilder = {
     /** @param {Creep} creep **/
     run: function (creep) {
         //Switching between building and harvest mode
-        if (creep.memory.building && creep.carry.energy == 0) {
-            creep.memory.building = false;
-            creep.say('🔄 harvest');
+        if (creep.memory.working && creep.carry.energy == 0) {
+            creep.memory.working = false;
         }
-        else if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.building = true;
-            creep.say('🚧 build');
+        else if (!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.working = true;
         }
 
-        if (creep.memory.building) {
+        if (creep.memory.working) {
             //Finding containers
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER);
+            let targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            if (targets.length) {
+                if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-            });
-            if (targets.length && creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
             else {
+                /*
                 //Repairing structures as a fallback
                 targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
@@ -34,11 +31,13 @@ var roleBuilder = {
                 if (targets.length && creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
+
+                */
             }
         }
         else {
             //Find containers with energy
-            var sources = creep.room.find(FIND_STRUCTURES, {
+            let sources = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (
                         structure.structureType == STRUCTURE_CONTAINER &&
@@ -48,8 +47,7 @@ var roleBuilder = {
             });
 
             if (sources.length) {
-                var withdrawCode = creep.withdraw(sources[0], RESOURCE_ENERGY);
-                if (withdrawCode == ERR_NOT_IN_RANGE) {
+                if (creep.withdraw(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
