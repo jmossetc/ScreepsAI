@@ -1,10 +1,10 @@
 var spawningBuilders = {
     run: function () {
 
-        var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+        let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
 
-        if (builders.length < 4) {
-            newName = 'Builder' + Game.time;
+        if (builders.length < 2) {
+            let newName = 'Builder' + Game.time;
             //Spawning builder
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE], newName, {
                 memory: {

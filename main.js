@@ -1,11 +1,11 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
-var spawning  = require('spawning');
-var creepManager  = require('creepManager');
+var spawning = require('spawning');
+var creepManager = require('creepManager');
 
-module.exports.loop = function() {
-    
+module.exports.loop = function () {
+
     spawning.run();
     /*
     var tower = Game.getObjectById('TOWER_ID');
@@ -24,4 +24,5 @@ module.exports.loop = function() {
     }
     */
     creepManager.run();
+    //console.log(Game.cpu.getUsed());
 }
