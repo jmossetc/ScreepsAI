@@ -6,7 +6,7 @@ var creepManager = require('creepManager');
 
 module.exports.loop = function () {
 
-    spawning.run();
+    spawning.run('Spawn1');
     /*
     var tower = Game.getObjectById('TOWER_ID');
     if (tower) {
