@@ -11,8 +11,17 @@ var roleRepairer = {
             }
 
             if (creep.memory.working) {
-                //Sorting structures by hit point ratio
-                targets = _.sortBy(creep.room.find(FIND_MY_STRUCTURES), structure => (structure.hits / structure.hitsMax));
+                //Sorting damaged structures by hit point ratio
+                let targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: s => {
+                        return (
+                            s.structureType == STRUCTURE_CONTAINER &&
+                            s.hits < s.hitsMax
+                        );
+                    }
+                }).sort((a, b) => (a.hits / a.hitsMax) - (b.hits / b.hitsMax));
+
+                //console.log(targets.toString());
                 if (targets.length) {
                     if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
