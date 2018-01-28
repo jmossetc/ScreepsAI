@@ -8,7 +8,7 @@
  */
 require('prototype.StructureSpawn')();
 
-const MAX_HARVESTERS = 3;
+const MAX_HARVESTERS = 2;
 const MAX_REPAIRERS = 1;
 const MAX_BUILDERS = 2;
 const MAX_UPGRADERS = 2;
