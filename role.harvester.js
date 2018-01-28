@@ -10,7 +10,7 @@ var roleHarvester = {
         }
         else {
             //Transfer to spawn, extension and towers first
-            let targets = creep.room.find(FIND_STRUCTURES, {
+            let target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return ((structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_SPAWN ||
@@ -20,15 +20,16 @@ var roleHarvester = {
                 }
             });
             //If no target found search for a container
-            if (!targets.length) {
-                targets = creep.room.find(FIND_STRUCTURES, {
+            if (target == null) {
+                target= creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) < structure.storeCapacity;
                     }
                 })
             }
-            if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            //sorting target by distance
+            if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }
