@@ -5,8 +5,11 @@ var spawning = require('spawning');
 var creepManager = require('creepManager');
 
 module.exports.loop = function () {
+    //console.log(Game.cpu.getUsed());
 
-    spawning.run('Spawn1');
+    if((Game.time % 25) === 0){
+        spawning.run('Spawn1');
+    }
     /*
     var tower = Game.getObjectById('TOWER_ID');
     if (tower) {
@@ -25,4 +28,4 @@ module.exports.loop = function () {
     */
     creepManager.run();
     //console.log(Game.cpu.getUsed());
-}
+};
