@@ -1,13 +1,9 @@
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
 var spawning = require('spawning');
 var creepManager = require('creepManager');
 
 module.exports.loop = function () {
-    //console.log(Game.cpu.getUsed());
-
-    if((Game.time % 25) === 0){
+    //console.log(Game.time);
+    if ((Game.time % 25) === 0) {
         spawning.run('Spawn1');
     }
     /*
