@@ -32,10 +32,10 @@ module.exports = function () {
                 case 'upgrader':
                 case 'harvester':
                     for (let i = 0; i < maxWorkBodyPart; i++) {
-                        /*console.log(
+                        console.log(
                             'currentCost : ' + currentCost
                             + ' energyGiven : ' + energy
-                        );*/
+                        );
                         currentCost += priceMap[WORK];
                         if (currentCost <= energy) {
                             body.push(WORK);
@@ -43,50 +43,47 @@ module.exports = function () {
                         else {
                             break;
                         }
-                        //console.log('while body : ' + body);
+                        console.log('while body : ' + body);
                     }
                     if (role == 'harvester') {
-                        //console.log('in harvester source assignement');
-
+                        console.log('in harvester source assignement');
 
                         let sourceAssigned;
                         let sourceAssignedNumber = 0;
                         let memorySources = this.room.find(FIND_SOURCES);
-                        //console.log('nb sources in room' + Memory.rooms['W7N5'].sources.length);
                         for (let i = 0; i < memorySources.length; i++) {
                             let currentSourceAssignedNumber = _.filter(harvesters,
                                 h => h.memory.source == memorySources[i]
                             ).length;
-                            //console.log('currentSourceAssigeddNumber : ' + currentSourceAssignedNumber);
+                            console.log('currentSourceAssigeddNumber : ' + currentSourceAssignedNumber);
                             if (currentSourceAssignedNumber <= sourceAssignedNumber) {
                                 sourceAssignedNumber = currentSourceAssignedNumber;
                                 sourceAssigned = memorySources[i];
-                                //console.log('source assigned : ' + memorySources[i]);
+                                console.log('source assigned : ' + memorySources[i]);
                             }
                         }
-                        //console.log('Assigned source : '+ sourceAssigned.id )
+                        console.log('Assigned source : ' + sourceAssigned.id)
                         Object.assign(creepMemory, {source: sourceAssigned.id});
                     }
                     Object.assign(creepMemory, {energyContainer: undefined});
                     codeSpawnCreep = this.spawnCreep(body, role + Game.time, {
                         memory: creepMemory
                     });
+                    console.log('code create spawn : ' + codeSpawnCreep);
                     return codeSpawnCreep;
                 case 'repairer':
                 case 'builder':
                 default:
-                    //console.log('builder or repairer');
-
                     let order = [MOVE, WORK, CARRY];
                     let workNumber = 1;
                     body.push(WORK);
-                    currentCost+=100;
+                    currentCost += priceMap[WORK];
                     while (currentCost <= energy) {
                         for (let bodyPart of order) {
                             if (bodyPart === WORK) {
                                 if (workNumber <= maxWorkBodyPart) {
                                     currentCost += priceMap[bodyPart];
-                                    if (currentCost < energy) {
+                                    if (currentCost <= energy) {
                                         body.push(bodyPart);
                                         workNumber++;
                                     }
@@ -94,7 +91,7 @@ module.exports = function () {
                             }
                             else {
                                 currentCost += priceMap[bodyPart];
-                                if (currentCost < energy) {
+                                if (currentCost <= energy) {
                                     body.push(bodyPart);
                                 }
                             }
