@@ -8,7 +8,7 @@
  */
 require('prototype.StructureSpawn')();
 
-const MAX_HARVESTERS = 2;
+const MAX_HARVESTERS = 3;
 const MAX_REPAIRERS = 1;
 const MAX_BUILDERS = 2;
 const MAX_UPGRADERS = 2;
@@ -42,14 +42,15 @@ var spawning = {
                 if (repairers.length < MAX_REPAIRERS) {
                     return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'repairer', undefined);
                 }
-                let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-                if (builders.length < MAX_BUILDERS) {
-                    return  Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'builder', undefined);
-                }
                 let upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
                 if (upgraders.length < MAX_UPGRADERS) {
                     return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'upgrader', undefined);
                 }
+                let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+                if (builders.length < MAX_BUILDERS) {
+                    return  Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'builder', undefined);
+                }
+
             }
         }
     }
