@@ -20,7 +20,6 @@ var creepManager = {
             else if (creep.memory.role == 'builder') {
                 roleBuilder.run(creep);
             }
-
         }
     }
 };
