@@ -8,11 +8,12 @@
  */
 require('prototype.StructureSpawn')();
 
-const MAX_HARVESTERS = 4;
+const MAX_HARVESTERS = 2;
 const MAX_REPAIRERS = 1;
 const MAX_BUILDERS = 2;
 const MAX_UPGRADERS = 2;
 const MIN_ENERGY = 200;
+const MAX_PRICE_HARVESTER = 700;
 
 var spawning = {
     run: function (spawnName) {
@@ -24,30 +25,30 @@ var spawning = {
         }
 
         //Generate creeps
-        let energy = Game.spawns[spawnName].room.energyCapacityAvailable;
+        let energyMax = Game.spawns[spawnName].room.energyCapacityAvailable;
         let energyAvailable = Game.spawns[spawnName].room.energyAvailable;
         if (energyAvailable > MIN_ENERGY) {
             let harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-            let repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
-            let upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-            let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
             if (harvesters.length < MAX_HARVESTERS) {
                 if (harvesters.length == 0) {
-                    Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'harvester', harvesters);
+                    return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'harvester', harvesters);
                 }
-                else if(energyAvailable == energy) {
-                    Game.spawns[spawnName].createCreepWithCustomRole(energy, 'harvester', harvesters);
+                else if (energyAvailable >= MAX_PRICE_HARVESTER || energyAvailable == energyMax) {
+                    return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'harvester', harvesters);
                 }
             }
-            else if(energyAvailable == energy) {
+            if (energyAvailable == energyMax) {
+                let repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
                 if (repairers.length < MAX_REPAIRERS) {
-                    Game.spawns[spawnName].createCreepWithCustomRole(energy, 'repairer', undefined);
+                    return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'repairer', undefined);
                 }
-                else if (builders.length < MAX_BUILDERS) {
-                    Game.spawns[spawnName].createCreepWithCustomRole(energy, 'builder', undefined);
+                let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+                if (builders.length < MAX_BUILDERS) {
+                    return  Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'builder', undefined);
                 }
-                else if (upgraders.length < MAX_UPGRADERS) {
-                    Game.spawns[spawnName].createCreepWithCustomRole(energy, 'upgrader', undefined);
+                let upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+                if (upgraders.length < MAX_UPGRADERS) {
+                    return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'upgrader', undefined);
                 }
             }
         }
