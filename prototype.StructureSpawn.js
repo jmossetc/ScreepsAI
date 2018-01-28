@@ -77,7 +77,7 @@ module.exports = function () {
                 default:
                     //console.log('builder or repairer');
 
-                    let order = [WORK, MOVE, CARRY];
+                    let order = [MOVE, WORK, CARRY];
                     let workNumber = 1;
                     body.push(WORK);
                     currentCost+=100;
