@@ -26,17 +26,16 @@ module.exports = function () {
             let body = baseBody;
             let currentCost = baseCost;
             let codeSpawnCreep = OK;
-            let creepMemory = {role: role}
+            let creepMemory = {role: role};
 
             switch (role) {
                 case 'upgrader':
                 case 'harvester':
-                    console.log('harvester or upgrader');
                     for (let i = 0; i < maxWorkBodyPart; i++) {
-                        console.log(
+                        /*console.log(
                             'currentCost : ' + currentCost
                             + ' energyGiven : ' + energy
-                        );
+                        );*/
                         currentCost += priceMap[WORK];
                         if (currentCost <= energy) {
                             body.push(WORK);
@@ -44,7 +43,7 @@ module.exports = function () {
                         else {
                             break;
                         }
-                        console.log('while body : ' + body);
+                        //console.log('while body : ' + body);
                     }
                     if (role == 'harvester') {
                         //console.log('in harvester source assignement');
@@ -58,59 +57,53 @@ module.exports = function () {
                             let currentSourceAssignedNumber = _.filter(harvesters,
                                 h => h.memory.source == memorySources[i]
                             ).length;
-                            console.log('currentSourceAssigeddNumber : ' + currentSourceAssignedNumber);
+                            //console.log('currentSourceAssigeddNumber : ' + currentSourceAssignedNumber);
                             if (currentSourceAssignedNumber <= sourceAssignedNumber) {
                                 sourceAssignedNumber = currentSourceAssignedNumber;
                                 sourceAssigned = memorySources[i];
-                                console.log('source assigned : ' + memorySources[i]);
+                                //console.log('source assigned : ' + memorySources[i]);
                             }
                         }
                         //console.log('Assigned source : '+ sourceAssigned.id )
                         Object.assign(creepMemory, {source: sourceAssigned.id});
                     }
+                    Object.assign(creepMemory, {energyContainer: undefined});
                     codeSpawnCreep = this.spawnCreep(body, role + Game.time, {
                         memory: creepMemory
                     });
                     return codeSpawnCreep;
-                    break;
                 case 'repairer':
                 case 'builder':
                 default:
-                    console.log('builder or repairer');
+                    //console.log('builder or repairer');
 
                     let order = [WORK, MOVE, CARRY];
                     let workNumber = 1;
                     body.push(WORK);
+                    currentCost+=100;
                     while (currentCost <= energy) {
-                        console.log(
-                            'currentCost : ' + currentCost
-                            + ' energyGiven : ' + energy
-                        );
-                        for (let bodyPart in order) {
-                            console.log('in for');
-
-                            if (workNumber <= maxWorkBodyPart) {
-                                console.log('Current cost : ' + currentCost +
-                                    '\nPrice body part' + priceMap[WORK] +
-                                    '\nType Current cost : ' + typeof currentCost +
-                                    '\nType Price body part : ' + typeof priceMap[WORK]);
-
-                                currentCost += priceMap[bodyPart];
-                                console.log('Current cost : ' + currentCost + '\nPrice body part' + priceMap[WORK]);
-
-                                if (currentCost <= energy) {
-                                    body.push(bodyPart);
-                                    workNumber++;
-                                }
-                                else {
-                                    break;
+                        for (let bodyPart of order) {
+                            if (bodyPart === WORK) {
+                                if (workNumber <= maxWorkBodyPart) {
+                                    currentCost += priceMap[bodyPart];
+                                    if (currentCost < energy) {
+                                        body.push(bodyPart);
+                                        workNumber++;
+                                    }
                                 }
                             }
-                            console.log('for body : ' + body);
-                        }
-                        console.log('while body : ' + body);
+                            else {
+                                currentCost += priceMap[bodyPart];
+                                if (currentCost < energy) {
+                                    body.push(bodyPart);
+                                }
+                            }
 
+                        }
                     }
+                    console.log(body);
+
+                    Object.assign(creepMemory, {energyContainer: undefined});
                     codeSpawnCreep = this.spawnCreep(body, role + Game.time, {
                         memory: {role: role}
                     });
