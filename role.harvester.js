@@ -11,6 +11,12 @@ var roleHarvester = {
         else {
             let target = Game.getObjectById(creep.memory.energyContainer);
             if (target == undefined || (target.structureType == STRUCTURE_CONTAINER && _.sum(target.store) == target.capacity) || target.energy == target.energyCapacity) {
+                target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) < structure.storeCapacity;
+                    }
+                })
+                /*
                 //Transfer to spawn, extension and towers first
                 target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
@@ -29,6 +35,7 @@ var roleHarvester = {
                         }
                     })
                 }
+                */
                 if (target != null) {
                     //console.log(target.toString());
                     creep.memory.energyContainer = target.id;
