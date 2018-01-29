@@ -6,8 +6,9 @@ module.exports.loop = function () {
     if ((Game.time % 25) === 0) {
         spawning.run('Spawn1');
     }
-    /*
-    var tower = Game.getObjectById('TOWER_ID');
+
+    creepManager.run();
+    var tower = Game.getObjectById('e529fa8c6d381ec');
     if (tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) => structure.hits < structure.hitsMax
@@ -21,7 +22,5 @@ module.exports.loop = function () {
             tower.attack(closestHostile);
         }
     }
-    */
-    creepManager.run();
     //console.log(Game.cpu.getUsed());
 };
