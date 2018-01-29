@@ -1,6 +1,6 @@
-const baseBody = [MOVE, CARRY];
+const baseBody = [MOVE, CARRY, WORK];
 const maxWorkBodyPart = 6;
-const baseCost = 100;
+const baseCost = 200;
 const priceMap = {};
 priceMap[MOVE] = 50;
 priceMap[WORK] = 100;
@@ -27,10 +27,11 @@ module.exports = function () {
             let currentCost = baseCost;
             let codeSpawnCreep = OK;
             let creepMemory = {role: role};
-
+            let workNumber = 1;
             switch (role) {
-                case 'upgrader':
                 case 'harvester':
+                    console.log('base body : ' + body);
+
                     for (let i = 0; i < maxWorkBodyPart; i++) {
                         console.log(
                             'currentCost : ' + currentCost
@@ -43,7 +44,8 @@ module.exports = function () {
                         else {
                             break;
                         }
-                        console.log('while body : ' + body);
+                        console.log('for body : ' + body);
+
                     }
                     if (role == 'harvester') {
                         console.log('in harvester source assignement');
@@ -71,29 +73,52 @@ module.exports = function () {
                     });
                     console.log('code create spawn : ' + codeSpawnCreep);
                     return codeSpawnCreep;
+                case 'hauler':
+                    let orderHauler = [MOVE, CARRY];
+                    while (currentCost <= energy) {
+                        for (let bodyPart of orderHauler) {
+                                console.log('in not work')
+                                currentCost += priceMap[bodyPart];
+                                if (currentCost <= energy)
+                                    body.push(bodyPart);
+                                else
+                                    break;
+                        }
+                    }
+                    console.log(body);
+
+                    Object.assign(creepMemory, {fillingTarget: undefined, refillingTarget: undefined});
+                    codeSpawnCreep = this.spawnCreep(body, role + Game.time, {
+                        memory: {role: role}
+                    });
+                    return codeSpawnCreep;
+                case 'upgrader':
                 case 'repairer':
                 case 'builder':
                 default:
-                    let order = [MOVE, WORK, CARRY];
-                    let workNumber = 1;
-                    body.push(WORK);
-                    currentCost += priceMap[WORK];
+                    let order = [MOVE, CARRY, WORK];
                     while (currentCost <= energy) {
                         for (let bodyPart of order) {
                             if (bodyPart === WORK) {
                                 if (workNumber <= maxWorkBodyPart) {
+                                    console.log('in work');
                                     currentCost += priceMap[bodyPart];
                                     if (currentCost <= energy) {
                                         body.push(bodyPart);
                                         workNumber++;
                                     }
+                                    else
+                                        break;
                                 }
                             }
                             else {
+                                console.log('in not work');
+
                                 currentCost += priceMap[bodyPart];
-                                if (currentCost <= energy) {
+                                if (currentCost <= energy)
                                     body.push(bodyPart);
-                                }
+                                else
+                                    break;
                             }
 
                         }

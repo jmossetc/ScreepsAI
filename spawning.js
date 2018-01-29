@@ -8,10 +8,12 @@
  */
 require('prototype.StructureSpawn')();
 
-const MAX_HARVESTERS = 2;
+const MAX_HARVESTERS = 1;
 const MAX_REPAIRERS = 1;
-const MAX_BUILDERS = 2;
-const MAX_UPGRADERS = 2;
+const MAX_BUILDERS = 1;
+const MAX_UPGRADERS = 1;
+const MAX_HAULERS = 1;
+
 const MIN_ENERGY = 200;
 const MAX_PRICE_HARVESTER = 700;
 
@@ -27,7 +29,7 @@ var spawning = {
         //Generate creeps
         let energyMax = Game.spawns[spawnName].room.energyCapacityAvailable;
         let energyAvailable = Game.spawns[spawnName].room.energyAvailable;
-        if (energyAvailable > MIN_ENERGY) {
+        if (energyAvailable >= MIN_ENERGY) {
             let harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
             if (harvesters.length < MAX_HARVESTERS) {
                 if (harvesters.length == 0) {
@@ -37,6 +39,11 @@ var spawning = {
                     return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'harvester', harvesters);
                 }
             }
+            let haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler');
+            if (haulers.length < MAX_HAULERS) {
+                return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'hauler', harvesters);
+            }
+
             if (energyAvailable == energyMax) {
                 let repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
                 if (repairers.length < MAX_REPAIRERS) {
@@ -48,7 +55,7 @@ var spawning = {
                 }
                 let builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
                 if (builders.length < MAX_BUILDERS) {
-                    return  Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'builder', undefined);
+                    return Game.spawns[spawnName].createCreepWithCustomRole(energyAvailable, 'builder', undefined);
                 }
 
             }
