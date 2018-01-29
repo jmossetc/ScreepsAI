@@ -2,6 +2,8 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
+var roleHauler = require('role.hauler');
+
 
 
 var creepManager = {
@@ -10,6 +12,9 @@ var creepManager = {
             let creep = Game.creeps[name];
             if (creep.memory.role == 'harvester') {
                 roleHarvester.run(creep);
+            }
+            else if (creep.memory.role == 'hauler') {
+                roleHauler.run(creep);
             }
             else if (creep.memory.role == 'repairer') {
                 roleRepairer.run(creep);
